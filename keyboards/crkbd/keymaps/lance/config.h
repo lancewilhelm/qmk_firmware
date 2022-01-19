@@ -36,12 +36,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef RGBLIGHT_ENABLE
     #undef RGBLED_NUM
-    #define RGBLIGHT_ANIMATIONS
     #define RGBLED_NUM 27
     #define RGBLIGHT_LIMIT_VAL 120
     #define RGBLIGHT_HUE_STEP 10
     #define RGBLIGHT_SAT_STEP 17
-    #define RGBLIGHT_VAL_STEP 17
+    #define RGBLIGHT_VAL_STEP 17                                                                                                                                                                                                                
+    #define RGBLIGHT_ANIMATIONS
+    #define RGBLIGHT_EFFECT_BREATHING
+    #define RGBLIGHT_EFFECT_RAINBOW_MOOD
+    #undef RGBLIGHT_EFFECT_RAINBOW_SWIRL
+    #undef RGBLIGHT_EFFECT_SNAKE
+    #undef RGBLIGHT_EFFECT_KNIGHT
+    #undef RGBLIGHT_EFFECT_CHRISTMAS
+    #define RGBLIGHT_EFFECT_STATIC_GRADIENT
+    #undef RGBLIGHT_EFFECT_RGB_TEST
+    #undef RGBLIGHT_EFFECT_ALTERNATING
+    #undef RGBLIGHT_EFFECT_TWINKLE
 #endif
 
 #define OLED_FONT_H "keyboards/crkbd/lib/glcdfont.c"
@@ -59,6 +69,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define RGB_MATRIX_SAT_STEP 8
 #    define RGB_MATRIX_VAL_STEP 8
 #    define RGB_MATRIX_SPD_STEP 10
+#    define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR
 
 /* Disable the animations you don't want/need.  You will need to disable a good number of these    *
  * because they take up a lot of space.  Disable until you can successfully compile your firmware. */
@@ -67,7 +78,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // https://docs.qmk.fm/#/feature_rgb_matrix?id=rgb-matrix-effects
 #    define ENABLE_RGB_MATRIX_ALPHAS_MODS
 #    undef ENABLE_RGB_MATRIX_GRADIENT_UP_DOWN
-#    undef ENABLE_RGB_MATRIX_GRADIENT_LEFT_RIGHT
+#    define ENABLE_RGB_MATRIX_GRADIENT_LEFT_RIGHT
 #    undef ENABLE_RGB_MATRIX_BREATHING
 #    undef ENABLE_RGB_MATRIX_BAND_SAT
 #    undef ENABLE_RGB_MATRIX_BAND_VAL
@@ -76,7 +87,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    undef ENABLE_RGB_MATRIX_BAND_SPIRAL_SAT
 #    undef ENABLE_RGB_MATRIX_BAND_SPIRAL_VAL
 #    undef ENABLE_RGB_MATRIX_CYCLE_ALL
-#    undef ENABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
+#    define ENABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
 #    undef ENABLE_RGB_MATRIX_CYCLE_UP_DOWN
 #    undef ENABLE_RGB_MATRIX_RAINBOW_MOVING_CHEVRON
 #    undef ENABLE_RGB_MATRIX_CYCLE_OUT_IN
@@ -106,7 +117,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTICROSS
 #    undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_NEXUS
 #    undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS
-#    undef ENABLE_RGB_MATRIX_SPLASH
+#    define ENABLE_RGB_MATRIX_SPLASH
 #    undef ENABLE_RGB_MATRIX_MULTISPLASH
 #    undef ENABLE_RGB_MATRIX_SOLID_SPLASH
 #    undef ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
