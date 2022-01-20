@@ -57,7 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define OLED_FONT_H "keyboards/crkbd/lib/glcdfont.c"
 
 #ifdef RGB_MATRIX_ENABLE
-#   define RGB_MATRIX_KEYPRESSES // reacts to keypresses
+#   undef RGB_MATRIX_KEYPRESSES // reacts to keypresses
 // #   define RGB_MATRIX_KEYRELEASES // reacts to keyreleases (instead of keypresses)
 // #   define RGB_DISABLE_AFTER_TIMEOUT 0 // number of ticks to wait until disabling effects
 #   define RGB_DISABLE_WHEN_USB_SUSPENDED // turn off effects when suspended
@@ -76,9 +76,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // RGB Matrix Animation modes. Explicitly enabled
 // For full list of effects, see:
 // https://docs.qmk.fm/#/feature_rgb_matrix?id=rgb-matrix-effects
-#    define ENABLE_RGB_MATRIX_ALPHAS_MODS
+#    undef ENABLE_RGB_MATRIX_ALPHAS_MODS
 #    undef ENABLE_RGB_MATRIX_GRADIENT_UP_DOWN
-#    define ENABLE_RGB_MATRIX_GRADIENT_LEFT_RIGHT
+#    undef ENABLE_RGB_MATRIX_GRADIENT_LEFT_RIGHT
 #    undef ENABLE_RGB_MATRIX_BREATHING
 #    undef ENABLE_RGB_MATRIX_BAND_SAT
 #    undef ENABLE_RGB_MATRIX_BAND_VAL
@@ -87,7 +87,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    undef ENABLE_RGB_MATRIX_BAND_SPIRAL_SAT
 #    undef ENABLE_RGB_MATRIX_BAND_SPIRAL_VAL
 #    undef ENABLE_RGB_MATRIX_CYCLE_ALL
-#    define ENABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
+#    undef ENABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
 #    undef ENABLE_RGB_MATRIX_CYCLE_UP_DOWN
 #    undef ENABLE_RGB_MATRIX_RAINBOW_MOVING_CHEVRON
 #    undef ENABLE_RGB_MATRIX_CYCLE_OUT_IN
@@ -117,7 +117,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTICROSS
 #    undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_NEXUS
 #    undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS
-#    define ENABLE_RGB_MATRIX_SPLASH
+#    undef ENABLE_RGB_MATRIX_SPLASH
 #    undef ENABLE_RGB_MATRIX_MULTISPLASH
 #    undef ENABLE_RGB_MATRIX_SOLID_SPLASH
 #    undef ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
