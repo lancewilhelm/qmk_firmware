@@ -36,7 +36,7 @@ enum corne_keycodes {
 #define NUMSYM MO(_NUMSYM)
 #define ARROWS MO(_ARROWS)
 
-uint8_t current_default_layer = default_boot_layer;
+uint8_t current_default_layer = _COLEMAK;
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_COLEMAK] = LAYOUT_split_3x6_3(
