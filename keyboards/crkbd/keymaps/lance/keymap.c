@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 #include <stdio.h>
-#include <print.h>
 
 enum corne_layers {
     _QWERTY,
@@ -37,6 +36,8 @@ enum corne_keycodes {
 #define ARROWS MO(_ARROWS)
 
 uint8_t current_default_layer = _COLEMAK;
+
+char wpm_str[10];
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_COLEMAK] = LAYOUT_split_3x6_3(
@@ -130,6 +131,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 #ifdef OLED_ENABLE
+// WPM-responsive animation stuff here
+#    define IDLE_FRAMES 5
+#    define IDLE_SPEED 20  // below this wpm value your animation will idle
+
+// #define PREP_FRAMES 1 // uncomment if >1
+
+#    define TAP_FRAMES 2
+#    define TAP_SPEED 40  // above this wpm value typing animation to trigger
+
+#    define ANIM_FRAME_DURATION 200  // how long each frame lasts in ms
+// #define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
+#    define ANIM_SIZE 636  // number of bytes in array, minimize for adequate firmware size, max is 1024
+
+uint32_t anim_timer         = 0;
+uint32_t anim_sleep         = 0;
+uint8_t  current_idle_frame = 0;
+// uint8_t current_prep_frame = 0; // uncomment if PREP_FRAMES >1
+uint8_t current_tap_frame = 0;
+
+// Code containing pixel art, contains:
+// 5 idle frames, 1 prep frame, and 2 tap frames
+
+// To make your own pixel art:
+// save a png/jpeg of an 128x32 image (resource: https://www.pixilart.com/draw )
+// follow this guide up to and including "CONVERT YOUR IMAGE" https://docs.splitkb.com/hc/en-us/articles/360013811280-How-do-I-convert-an-image-for-use-on-an-OLED-display-
+// replace numbers in brackets with your own
+// if you start getting errors when compiling make sure you didn't accedentally delete a bracket
+
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   if (!is_keyboard_master()) {
     return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
@@ -211,6 +240,9 @@ void oled_render_logo(void) {
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
         oled_render_layer_state();
+        // oled_set_cursor(0, 0);                            // sets cursor to (row, column) using charactar spacing (5 rows on 128x32 screen, anything more will overflow back to the top)
+        sprintf(wpm_str, "WPM:%03d", get_current_wpm());  // edit the string to change wwhat shows up, edit %03d to change how many digits show up
+        oled_write(wpm_str, false);                       // writes wpm on top left corner of string
     } else {
         oled_render_logo();
     }
