@@ -35,8 +35,6 @@ enum corne_keycodes {
 #define NUMSYM MO(_NUMSYM)
 #define ARROWS MO(_ARROWS)
 
-uint8_t current_default_layer = _COLEMAK;
-
 char wpm_str[10];
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -68,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_NUMSYM] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_TAB,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BSPC,
+       KC_GRV,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_ESC, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,                      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -104,7 +102,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
-layer_state_t layer_state_set_user(layer_state_t state) { 
+layer_state_t layer_state_set_user(layer_state_t state) {
     return update_tri_layer_state(state, _NUMSYM, _ARROWS, _ADJUST); 
 }
 
@@ -115,14 +113,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case QWERTY:
             if (record->event.pressed) {
                 set_single_persistent_default_layer(_QWERTY);
-                current_default_layer = _QWERTY;
             }
             return false;
             break;
         case COLEMAK:
             if (record->event.pressed) {
                 set_single_persistent_default_layer(_COLEMAK);
-                current_default_layer = _COLEMAK;
             }
             return false;
             break;
@@ -176,7 +172,7 @@ void oled_render_layer_state(void) {
 
     switch (layer_state) {
         case L_BASE :
-            if (current_default_layer == _QWERTY) {
+            if (default_layer_state == 1) {
                 oled_write_P(PSTR("QWERTY"), false);
             } else {
                 oled_write_P(PSTR("Colemak"), false);
