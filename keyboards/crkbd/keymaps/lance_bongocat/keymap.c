@@ -36,8 +36,6 @@ enum corne_keycodes {
 #define NUMSYM MO(_NUMSYM)
 #define ARROWS MO(_ARROWS)
 
-char wpm_str[10];
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_COLEMAK] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
@@ -150,8 +148,11 @@ static void oled_write_compressed_P(const char* input_block_map, const char* inp
 #endif //USE_OLED_COMPRESSION
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    if (!is_keyboard_master()) {
+    if (is_keyboard_master() && !is_keyboard_left()) {
         return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
+    }
+    if (!is_keyboard_master() && !is_keyboard_left()) {
+        return OLED_ROTATION_180;
     }
     return rotation;
 }
@@ -240,15 +241,28 @@ static void render_anim(void) {
     }
 }
 
-bool oled_task_user(void) {
+static void render_wpm(int current_wpm) {
+    char wpm_str[8];
+    oled_set_cursor(0, 0);  // sets cursor to (row, column) using character spacing (5 rows on 128x32 screen, anything more will overflow back to the top)
+    wpm_str[0] = 'W';
+    wpm_str[1] = 'P';
+    wpm_str[2] = 'M';
+    wpm_str[3] = ':';
+    wpm_str[4] = '0' + (current_wpm / 100) % 10;
+    wpm_str[5] = '0' + (current_wpm / 10) % 10;
+    wpm_str[6] = '0' + current_wpm % 10;
+    wpm_str[7] = '\0';
+    oled_write(wpm_str, false);
+}
+
+bool oled_task_kb(void) {
     if (is_keyboard_master()) {
-        render_anim();  // renders pixelart
-        oled_set_cursor(1, 0);                            // sets cursor to (row, column) using charactar spacing (5 rows on 128x32 screen, anything more will overflow back to the top)
-        oled_render_layer_state();
-        // sprintf(wpm_str, "WPM:%03d", get_current_wpm());  // edit the string to change wwhat shows up, edit %03d to change how many digits show up
-        // oled_write(wpm_str, false);                       // writes wpm on top left corner of string
+        int current_wpm = get_current_wpm();
+        render_anim();
+        render_wpm(current_wpm);
     } else {
-        oled_render_logo();
+        oled_render_logo();        
+        oled_render_layer_state();
     }
     return false;
 }
