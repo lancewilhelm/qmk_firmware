@@ -36,6 +36,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define NO_ACTION_ONESHOT
 
+#define SPLIT_LAYER_STATE_ENABLE
+
 #undef NKRO_ENABLE
 
 #ifdef RGBLIGHT_ENABLE
@@ -61,7 +63,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define OLED_FONT_H "keyboards/crkbd/lib/glcdfont.c"
 
 #ifdef RGB_MATRIX_ENABLE
-#   undef RGB_MATRIX_KEYPRESSES // reacts to keypresses
+#   define RGB_MATRIX_KEYPRESSES // reacts to keypresses
 // #   define RGB_MATRIX_KEYRELEASES // reacts to keyreleases (instead of keypresses)
 // #   define RGB_DISABLE_AFTER_TIMEOUT 0 // number of ticks to wait until disabling effects
 #   define RGB_DISABLE_WHEN_USB_SUSPENDED // turn off effects when suspended
@@ -121,7 +123,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTICROSS
 #    undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_NEXUS
 #    undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS
-#    undef ENABLE_RGB_MATRIX_SPLASH
+#    define ENABLE_RGB_MATRIX_SPLASH
 #    undef ENABLE_RGB_MATRIX_MULTISPLASH
 #    undef ENABLE_RGB_MATRIX_SOLID_SPLASH
 #    undef ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
