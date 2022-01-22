@@ -127,31 +127,41 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
+// OLED CODE -------------------------------------------------
 #ifdef OLED_ENABLE
-// Code containing pixel art, contains:
-// 5 idle frames, 1 prep frame, and 2 tap frames
 
-// To make your own pixel art:
-// save a png/jpeg of an 128x32 image (resource: https://www.pixilart.com/draw )
-// follow this guide up to and including "CONVERT YOUR IMAGE" https://docs.splitkb.com/hc/en-us/articles/360013811280-How-do-I-convert-an-image-for-use-on-an-OLED-display-
-// replace numbers in brackets with your own
-// if you start getting errors when compiling make sure you didn't accedentally delete a bracket
+#ifdef USE_OLED_COMPRESSION
+static void oled_write_compressed_P(const char* input_block_map, const char* input_block_list) {
+    uint16_t block_index = 0;
+    for (uint16_t i = 0; i < NUM_OLED_BYTES; i++) {
+        uint8_t bit          = i % 8;
+        uint8_t map_index    = i / 8;
+        uint8_t _block_map   = (uint8_t)pgm_read_byte_near(input_block_map + map_index);
+        uint8_t nonzero_byte = (_block_map & (1 << bit));
+        if (nonzero_byte) {
+            const char data = (const char)pgm_read_byte_near(input_block_list + block_index++);
+            oled_write_raw_byte(data, i);
+        } else {
+            const char data = (const char)0x00;
+            oled_write_raw_byte(data, i);
+        }
+    }
+}
+#endif //USE_OLED_COMPRESSION
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (!is_keyboard_master()) {
-    return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
-  }
-  return rotation;
+    if (!is_keyboard_master()) {
+        return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
+    }
+    return rotation;
 }
-
 #define L_BASE 0
 #define L_NUMSYM 4
 #define L_ARROWS 8
 #define L_ADJUST 28
 
+// Writes the current layer state on the screen wherever the cursor is
 void oled_render_layer_state(void) {
-    // oled_write_P(PSTR("Layer: "), false);
-
     switch (layer_state) {
         case L_BASE :
             if (default_layer_state == 1) {
@@ -159,7 +169,6 @@ void oled_render_layer_state(void) {
             } else {
                 oled_write_P(PSTR("Colemak"), false);
             }
-
             break;
         case L_NUMSYM:
             oled_write_P(PSTR("NumSym"), false);
@@ -174,35 +183,44 @@ void oled_render_layer_state(void) {
 }
 
 void oled_render_logo(void) {
-    oled_write_raw_P(lance_logo, sizeof(lance_logo));
+    #ifdef USE_OLED_COMPRESSION
+    oled_write_compressed_P(lance_logo_map, lance_logo_list);
+    #else
+    oled_write_raw_P(lance_logo, NUM_OLED_BYTES);
+    #endif //USE_OLED_COMPRESSION
 }
 
-// Code containing pixel art, contains:
-// 5 idle frames, 1 prep frame, and 2 tap frames
-
-// To make your own pixel art:
-// save a png/jpeg of an 128x32 image (resource: https://www.pixilart.com/draw )
-// follow this guide up to and including "CONVERT YOUR IMAGE" https://docs.splitkb.com/hc/en-us/articles/360013811280-How-do-I-convert-an-image-for-use-on-an-OLED-display-
-// replace numbers in brackets with your own
-// if you start getting errors when compiling make sure you didn't accedentally delete a bracket
-static void render_anim(void) {
-    
-
-    // assumes 1 frame prep stage
-    void animation_phase(void) {
-        if (get_current_wpm() <= IDLE_SPEED) {
-            current_idle_frame = (current_idle_frame + 1) % IDLE_FRAMES;
-            oled_write_raw_P(idle[abs((IDLE_FRAMES - 1) - current_idle_frame)], ANIM_SIZE);
-        }
-        if (get_current_wpm() > IDLE_SPEED && get_current_wpm() < TAP_SPEED) {
-            // oled_write_raw_P(prep[abs((PREP_FRAMES-1)-current_prep_frame)], ANIM_SIZE); // uncomment if IDLE_FRAMES >1
-            oled_write_raw_P(prep[0], ANIM_SIZE);  // remove if IDLE_FRAMES >1
-        }
-        if (get_current_wpm() >= TAP_SPEED) {
-            current_tap_frame = (current_tap_frame + 1) % TAP_FRAMES;
-            oled_write_raw_P(tap[abs((TAP_FRAMES - 1) - current_tap_frame)], ANIM_SIZE);
-        }
+void animation_phase(void) {
+    if (get_current_wpm() <= IDLE_SPEED) {
+        current_idle_frame = (current_idle_frame + 1) % IDLE_FRAMES;
+        uint8_t idx = abs((IDLE_FRAMES - 1) - current_idle_frame);
+        #ifdef USE_OLED_COMPRESSION
+        oled_write_compressed_P(idle_maps[idx], idle_lists[idx]);
+        #else
+        oled_write_raw_P(idle[idx], ANIM_SIZE);
+        #endif //USE_OLED_COMPRESSION
     }
+    if (get_current_wpm() > IDLE_SPEED && get_current_wpm() < TAP_SPEED) {
+        #ifdef USE_OLED_COMPRESSION
+        oled_write_compressed_P(prep_map, prep_list);
+        #else
+        oled_write_raw_P(prep[0], ANIM_SIZE);  // remove if IDLE_FRAMES >1
+        // oled_write_raw_P(prep[abs((PREP_FRAMES-1)-current_prep_frame)], ANIM_SIZE);
+        #endif //USE_OLED_COMPRESSION
+    }
+    if (get_current_wpm() >= TAP_SPEED) {
+        current_tap_frame = (current_tap_frame + 1) % TAP_FRAMES;
+        uint8_t idx = abs((TAP_FRAMES - 1) - current_tap_frame);
+        #ifdef USE_OLED_COMPRESSION
+            oled_write_compressed_P(tap_maps[idx], tap_lists[idx]);
+        #else
+            oled_write_raw_P(tap[idx], ANIM_SIZE);
+        #endif
+    }
+}
+
+static void render_anim(void) {
+    // assumes 1 frame prep stagen
     if (get_current_wpm() != 000) {
         oled_on();  // not essential but turns on animation OLED with any alpha keypress
         if (timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
@@ -225,7 +243,7 @@ static void render_anim(void) {
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
         render_anim();  // renders pixelart
-        oled_set_cursor(0, 0);                            // sets cursor to (row, column) using charactar spacing (5 rows on 128x32 screen, anything more will overflow back to the top)
+        oled_set_cursor(1, 0);                            // sets cursor to (row, column) using charactar spacing (5 rows on 128x32 screen, anything more will overflow back to the top)
         oled_render_layer_state();
         // sprintf(wpm_str, "WPM:%03d", get_current_wpm());  // edit the string to change wwhat shows up, edit %03d to change how many digits show up
         // oled_write(wpm_str, false);                       // writes wpm on top left corner of string
