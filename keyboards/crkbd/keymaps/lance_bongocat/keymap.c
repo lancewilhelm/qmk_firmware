@@ -183,13 +183,13 @@ void oled_render_layer_state(void) {
     }
 }
 
-void oled_render_logo(void) {
-    #ifdef USE_OLED_COMPRESSION
-    oled_write_compressed_P(lance_logo_map, lance_logo_list);
-    #else
-    oled_write_raw_P(lance_logo, NUM_OLED_BYTES);
-    #endif //USE_OLED_COMPRESSION
-}
+// void oled_render_logo(void) {
+//     #ifdef USE_OLED_COMPRESSION
+//     oled_write_compressed_P(lance_logo_map, lance_logo_list);
+//     #else
+//     oled_write_raw_P(lance_logo, NUM_OLED_BYTES);
+//     #endif //USE_OLED_COMPRESSION
+// }
 
 void animation_phase(void) {
     if (get_current_wpm() <= IDLE_SPEED) {
@@ -255,14 +255,70 @@ static void render_wpm(int current_wpm) {
     oled_write(wpm_str, false);
 }
 
+// Toggles pixel on/off, converts horizontal coordinates to vertical equivalent if necessary
+static void write_pixel(int x, int y, bool onoff) {
+    if (oled_horizontal) {
+        oled_write_pixel(x, y, onoff);
+    } else {
+        oled_write_pixel(y, 127 - x, onoff);
+    }
+}
+
+// Update WPM graph
+static void render_wpm_graph(int current_wpm) {
+    int line_height = ((current_wpm / graph_top_wpm) * 7);
+    if (line_height > 7) {
+        line_height = 7;
+    }
+    // Count graph line pixels, return if nothing to draw
+    int pixel_count = line_height;
+    for (int i = 0; i < 63; i++) {
+        pixel_count += graph_lines[i];
+    }
+    if (pixel_count == 0) {
+        return;
+    }
+    // Shift array elements left or right depending on graph_direction, append new graph line
+    if (graph_direction) {
+        for (int i = 0; i < 63; i++) {
+            graph_lines[i] = graph_lines[i + 1];
+        }
+        graph_lines[63] = line_height;
+    } else {
+        for (int i = 63; i > 0; i--) {
+            graph_lines[i] = graph_lines[i - 1];
+        }
+        graph_lines[0] = line_height;
+    }
+    // Draw all graph lines (left to right, bottom to top)
+    int draw_count, arrpos;
+    for (int x = 1; x <= 127; x += 2) {
+        arrpos = x / 2;
+        draw_count = graph_lines[arrpos];
+        for (int y = 31; y >= 25; y--) {
+            if (draw_count > 0) {
+                write_pixel(x, y, true);
+                draw_count--;
+            } else {
+                write_pixel(x, y, false);
+            }
+        }
+    }
+}
+
 bool oled_task_kb(void) {
+    int current_wpm = get_current_wpm();
     if (is_keyboard_master()) {
-        int current_wpm = get_current_wpm();
         render_anim();
         render_wpm(current_wpm);
     } else {
-        oled_render_logo();        
+        // oled_render_logo();
         oled_render_layer_state();
+        // Update WPM graph every graph_refresh milliseconds
+        if (timer_elapsed(timer) > graph_refresh) {
+            render_wpm_graph(current_wpm);
+            timer = timer_read();
+        }
     }
     return false;
 }
