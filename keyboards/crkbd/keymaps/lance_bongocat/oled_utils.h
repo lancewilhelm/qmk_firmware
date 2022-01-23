@@ -3,37 +3,37 @@
 #ifdef OLED_ENABLE
 
 /*===========================================    OLED CONFIGURATION    ===========================================*/
-#define USE_OLED_COMPRESSION
+#    define USE_OLED_COMPRESSION
 // #undef USE_OLED_COMPRESSION
 // WPM-responsive animation stuff here
-#define IDLE_FRAMES 5
-#define IDLE_SPEED 20  // below this wpm value your animation will idle
-#define TAP_FRAMES 2
-#define TAP_SPEED 40  // above this wpm value typing animation to trigger
-#define ANIM_FRAME_DURATION 200  // how long each frame lasts in ms
-#define ANIM_SIZE 636  // number of bytes in array, minimize for adequate firmware size, max is 1024
-#define NUM_OLED_BYTES 512
-bool  oled_horizontal   = true;         // OLED rotation  (true = horizontal,  false = vertical)
+#    define IDLE_FRAMES 5
+#    define IDLE_SPEED 20  // below this wpm value your animation will idle
+#    define TAP_FRAMES 2
+#    define TAP_SPEED 40             // above this wpm value typing animation to trigger
+#    define ANIM_FRAME_DURATION 200  // how long each frame lasts in ms
+#    define ANIM_SIZE 636            // number of bytes in array, minimize for adequate firmware size, max is 1024
+#    define NUM_OLED_BYTES 512
+bool oled_horizontal = false;  // OLED rotation  (true = horizontal,  false = vertical)
 // bool  ansi_layout       = true;         // ANSI or ISO layout  (true = ANSI,  false = ISO)
 // bool  split_space       = true;         // Split spacebar  (true = split spacebar,  false = 6.25u or 7u spacebar)
 // bool  three_mods_left   = true;         // Left mods layout  (true = 3x 1.25u keys,  false = 2x 1.5u keys)
 // bool  three_mods_right  = false;        // Right mods layout  (true = 3x 1u keys,  false = 2x 1.5u keys)
-bool  graph_direction   = true;         // Graph movement  (true = right to left,  false = left to right)
-float graph_top_wpm     = 100.0;        // Minimum WPM required to reach the top of the graph
-int   graph_refresh     = 1000;         // In milliseconds, determines the graph-line frequency
-// int   icon_med_wpm      = 50;           // WPM required to display the medium snail
-// int   icon_fast_wpm     = 72;           // WPM required to display the fast snail
+bool  graph_direction = true;   // Graph movement  (true = right to left,  false = left to right)
+float graph_top_wpm   = 100.0;  // Minimum WPM required to reach the top of the graph
+int   graph_refresh   = 1000;   // In milliseconds, determines the graph-line frequency
+int   icon_med_wpm      = 50;           // WPM required to display the medium snail
+int   icon_fast_wpm     = 72;           // WPM required to display the fast snail
 // Layer names:  Should be exactly 5 characters in length if vertical display, or 6 characters if horizontal
 uint32_t anim_timer         = 0;
 uint32_t anim_sleep         = 0;
 uint8_t  current_idle_frame = 0;
-uint8_t current_tap_frame = 0;
-bool  first_loop  = true;
-int   timer       = 0;
-int   wpm_limit   = 20;
-int   max_wpm     = -1;
-int   wpm_icon    = -1;
-int   graph_lines[64];
+uint8_t  current_tap_frame  = 0;
+bool     first_loop         = true;
+int      timer              = 0;
+int      wpm_limit          = 20;
+int      max_wpm            = -1;
+int      wpm_icon           = -1;
+int      graph_lines[64];
 /*================================================================================================================*/
 
 #ifdef USE_OLED_COMPRESSION
