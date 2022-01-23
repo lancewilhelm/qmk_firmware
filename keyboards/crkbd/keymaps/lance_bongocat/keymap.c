@@ -150,9 +150,10 @@ static void oled_write_compressed_P(const char* input_block_map, const char* inp
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     if (is_keyboard_master() && !is_keyboard_left()) {
         return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
-    }
-    if (!is_keyboard_master() && !is_keyboard_left()) {
-        return OLED_ROTATION_180;
+    } else if (!is_keyboard_master() && !is_keyboard_left()) {
+        return OLED_ROTATION_270;
+    } else if (!is_keyboard_master() && is_keyboard_left()) {
+        return OLED_ROTATION_270;
     }
     return rotation;
 }
@@ -162,23 +163,28 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 #define L_ADJUST 28
 
 // Writes the current layer state on the screen wherever the cursor is
-void oled_render_layer_state(void) {
+void render_layer_state(void) {
+    if (oled_horizontal) {
+    oled_set_cursor(0, 0);
+  } else {
+    oled_set_cursor(0, 15);
+  }
     switch (layer_state) {
         case L_BASE :
             if (default_layer_state == 1) {
-                oled_write_P(PSTR("QWERTY"), false);
+                oled_write_P(PSTR("QWERT"), false);
             } else {
-                oled_write_P(PSTR("Colemak"), false);
+                oled_write_P(PSTR("Colmk"), false);
             }
             break;
         case L_NUMSYM:
-            oled_write_P(PSTR("NumSym"), false);
+            oled_write_P(PSTR("NmSym"), false);
             break;
         case L_ARROWS:
-            oled_write_P(PSTR("Arrows"), false);
+            oled_write_P(PSTR("Arrws"), false);
             break;
         case L_ADJUST:
-            oled_write_P(PSTR("Adjust"), false);
+            oled_write_P(PSTR("Adjst"), false);
             break;
     }
 }
@@ -220,7 +226,7 @@ void animation_phase(void) {
     }
 }
 
-static void render_anim(void) {
+static void render_bongo_cat(void) {
     // assumes 1 frame prep stagen
     if (get_current_wpm() != 000) {
         oled_on();  // not essential but turns on animation OLED with any alpha keypress
@@ -241,18 +247,29 @@ static void render_anim(void) {
     }
 }
 
-static void render_wpm(int current_wpm) {
-    char wpm_str[8];
-    oled_set_cursor(0, 0);  // sets cursor to (row, column) using character spacing (5 rows on 128x32 screen, anything more will overflow back to the top)
-    wpm_str[0] = 'W';
-    wpm_str[1] = 'P';
-    wpm_str[2] = 'M';
-    wpm_str[3] = ':';
-    wpm_str[4] = '0' + (current_wpm / 100) % 10;
-    wpm_str[5] = '0' + (current_wpm / 10) % 10;
-    wpm_str[6] = '0' + current_wpm % 10;
-    wpm_str[7] = '\0';
-    oled_write(wpm_str, false);
+// Update WPM counters
+static void render_wpm_counters(int current_wpm) {
+    int cursorposition_cur = 2;
+    int cursorposition_max = 1;
+    if (oled_horizontal == false) {
+        cursorposition_cur = 13;
+        cursorposition_max = 14;
+    }
+
+    char wpm_counter[4];
+    wpm_counter[3] = '\0';
+    wpm_counter[2] = '0' + current_wpm % 10;
+    wpm_counter[1] = '0' + (current_wpm / 10) % 10;
+    wpm_counter[0] = '0' + (current_wpm / 100) % 10;
+    oled_set_cursor(0, cursorposition_cur);
+    oled_write(wpm_counter, false);
+
+    if (current_wpm > max_wpm) {
+        max_wpm = current_wpm;
+        wpm_limit = max_wpm + 20;
+        oled_set_cursor(0, cursorposition_max);
+        oled_write(wpm_counter, false);
+    }
 }
 
 // Toggles pixel on/off, converts horizontal coordinates to vertical equivalent if necessary
@@ -262,6 +279,56 @@ static void write_pixel(int x, int y, bool onoff) {
     } else {
         oled_write_pixel(y, 127 - x, onoff);
     }
+}
+
+// Update WPM snail icon
+static void render_wpm_icon(int current_wpm) {
+    // wpm_icon is used to prevent unnecessary redraw
+    if ((current_wpm < icon_med_wpm) && (wpm_icon != 0)) {
+        wpm_icon = 0;
+    } else if ((current_wpm >= icon_med_wpm) && (current_wpm < icon_fast_wpm) && (wpm_icon != 1)) {
+        wpm_icon = 1;
+    } else if ((current_wpm >= icon_fast_wpm) && (wpm_icon != 2)) {
+        wpm_icon = 2;
+    } else {
+        return;
+    }
+    static const char PROGMEM snails[][2][24] = {
+        {{0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x20, 0xA0, 0x20, 0x40, 0x40, 0x80, 0x00, 0x00, 0x00, 0x80, 0x40, 0x20, 0x50, 0x88, 0x04, 0x00, 0x00},
+         {0x40, 0x60, 0x50, 0x4E, 0x51, 0x64, 0x4A, 0x51, 0x54, 0x49, 0x41, 0x62, 0x54, 0x49, 0x46, 0x41, 0x40, 0x30, 0x09, 0x04, 0x02, 0x01, 0x00, 0x00}},
+        {{0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x40, 0x40, 0x40, 0x40, 0x80, 0x80, 0x00, 0x00, 0x00, 0x04, 0x98, 0x60, 0x80, 0x00, 0x00, 0x00, 0x00},
+         {0x60, 0x50, 0x54, 0x4A, 0x51, 0x64, 0x4A, 0x51, 0x55, 0x49, 0x41, 0x62, 0x54, 0x49, 0x46, 0x41, 0x21, 0x10, 0x0A, 0x08, 0x05, 0x02, 0x00, 0x00}},
+        {{0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x40, 0x40, 0x40, 0x80, 0x80, 0x10, 0x10, 0x10, 0x20, 0x40, 0x40, 0xC0, 0x80, 0x80, 0x00, 0x00, 0x00},
+         {0x60, 0x58, 0x54, 0x62, 0x49, 0x54, 0x52, 0x51, 0x55, 0x49, 0x62, 0x52, 0x4D, 0x45, 0x46, 0x22, 0x21, 0x11, 0x10, 0x0A, 0x08, 0x05, 0x02, 0x00}}
+    };
+    if (oled_horizontal) {
+        oled_set_cursor(3, 1);
+        oled_write_raw_P(snails[wpm_icon][0], sizeof(snails[wpm_icon][0]));
+        oled_set_cursor(3, 2);
+        oled_write_raw_P(snails[wpm_icon][1], sizeof(snails[wpm_icon][1]));
+    } else {
+        oled_set_cursor(0, 11);
+        oled_write_raw_P(snails[wpm_icon][0], sizeof(snails[wpm_icon][0]));
+        oled_set_cursor(0, 12);
+        oled_write_raw_P(snails[wpm_icon][1], sizeof(snails[wpm_icon][1]));
+    }
+}
+
+static void render_lance(void) {
+    // 'lancesigkeyboardtiny', 16x32px
+    static const char PROGMEM lance_logo_1[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0xf8, 0x18, 0x18, 0x18, 0x18, 0x18, 0x00, 0x00, 0x00, 0x00};
+    static const char PROGMEM lance_logo_2[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0xb6, 0xb6, 0xbe, 0xb6, 0xb6, 0x9c, 0x88, 0x00, 0x00, 0x00, 0x00};
+    static const char PROGMEM lance_logo_3[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0xcd, 0xed, 0x6d, 0x6d, 0x6d, 0xe7, 0xc3, 0x00, 0x00, 0x00, 0x00};
+    static const char PROGMEM lance_logo_4[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x7b, 0x7b, 0x18, 0x38, 0x18, 0x7b, 0x7b, 0x00, 0x00, 0x00, 0x00};
+
+    oled_set_cursor(1, 0);
+    oled_write_raw_P(lance_logo_1, sizeof(lance_logo_1));
+    oled_set_cursor(1, 1);
+    oled_write_raw_P(lance_logo_2, sizeof(lance_logo_2));
+    oled_set_cursor(1, 2);
+    oled_write_raw_P(lance_logo_3, sizeof(lance_logo_3));
+    oled_set_cursor(1, 3);
+    oled_write_raw_P(lance_logo_4, sizeof(lance_logo_4));
 }
 
 // Update WPM graph
@@ -306,14 +373,20 @@ static void render_wpm_graph(int current_wpm) {
     }
 }
 
-bool oled_task_kb(void) {
+bool oled_task_user(void) {
     int current_wpm = get_current_wpm();
     if (is_keyboard_master()) {
-        render_anim();
-        render_wpm(current_wpm);
+        render_bongo_cat();
+        render_lance();
     } else {
         // oled_render_logo();
-        oled_render_layer_state();
+        // render_wpm(current_wpm);
+        // Update the layer state
+        render_layer_state();
+        // Update WPM counters
+        render_wpm_counters(current_wpm);
+        // Update WPM snail icon
+        render_wpm_icon(current_wpm);
         // Update WPM graph every graph_refresh milliseconds
         if (timer_elapsed(timer) > graph_refresh) {
             render_wpm_graph(current_wpm);
