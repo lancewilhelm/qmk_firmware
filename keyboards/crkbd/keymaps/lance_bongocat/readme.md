@@ -1,1 +1,1 @@
-![Image of the corne keyboard layout](IMG_0969.JPG)
+![IMG_0969](https://user-images.githubusercontent.com/11323174/154599231-651f33a8-52e4-41c9-82e9-4b32391fe79c.JPG)
