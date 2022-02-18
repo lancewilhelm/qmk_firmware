@@ -1,0 +1,1 @@
+![Image of the corne keyboard layout](IMG_0969.JPG)
