@@ -45,7 +45,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_K,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, RSFT_T(KC_ENT),
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                      KC_LCTL, KC_LGUI,  NUMSYM,            KC_SPC,   KC_LALT, ARROWS
+                                      KC_LCTL, KC_LALT,  NUMSYM,            KC_SPC,   KC_LGUI, ARROWS
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -58,7 +58,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  RSFT_T(KC_ENT),
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                      KC_LCTL, KC_LGUI,  NUMSYM,            KC_SPC,   KC_LALT, ARROWS
+                                      KC_LCTL, KC_LALT,  NUMSYM,            KC_SPC,   KC_LGUI, ARROWS
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -71,7 +71,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT, KC_UNDS,  KC_PLUS,KC_LCBR, KC_RCBR, KC_PIPE,                      KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS, RSFT_T(KC_ENT),
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                      KC_LCTL, KC_LGUI,  _______,            KC_SPC,   KC_LALT, _______
+                                      KC_LCTL, KC_LALT,  _______,            KC_SPC,   KC_LGUI, _______
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -83,7 +83,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
         KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RSFT_T(KC_ENT),
     //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                   KC_LCTL, KC_LGUI,  _______,            KC_SPC,   KC_LALT, _______
+                                   KC_LCTL, KC_LALT,  _______,            KC_SPC,   KC_LGUI, _______
                                         //`--------------------------'  `--------------------------'
   ),
   
@@ -95,7 +95,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, RGB_SPD, XXXXXXX,                      XXXXXXX, LCA(KC_1), LCA(KC_5), LCA(KC_4), XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                    KC_LCTL, KC_LGUI,  _______,            KC_SPC,   KC_LALT, _______
+                                    KC_LCTL, KC_LALT,  _______,            KC_SPC,   KC_LGUI, _______
                                       //`--------------------------'  `--------------------------'
   ),  
 
@@ -105,7 +105,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return update_tri_layer_state(state, _NUMSYM, _ARROWS, _ADJUST); 
 }
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {                               
     // if (record->event.pressed) {
         // dprintf("key pressed, %lu\n", layer_state);    }
     switch (keycode) {
