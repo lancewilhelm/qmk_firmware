@@ -31,12 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define USE_SERIAL_PD2
 
-#define TAPPING_FORCE_HOLD
-#define TAPPING_TERM 200
-
-#define ONESHOT_TAP_TOGGLE 3
-#define ONESHOT_TIMEOUT 5000
-
 #define SPLIT_LAYER_STATE_ENABLE
 #define SPLIT_WPM_ENABLE
 
