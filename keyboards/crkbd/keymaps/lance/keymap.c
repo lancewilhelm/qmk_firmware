@@ -33,6 +33,7 @@ enum corne_keycodes {
 
 #define NUMSYM MO(_NUMSYM)
 #define ARROWS MO(_ARROWS)
+#define ADJUST MO(_ADJUST)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT_split_3x6_3(
@@ -43,51 +44,52 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_ENT,
     //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                      KC_LALT, NUMSYM,  KC_LSFT,            KC_SPC,   KC_LGUI, ARROWS
+                                      KC_LGUI, NUMSYM,  KC_LSFT,            KC_LALT,   KC_SPC, ARROWS
                                       //`--------------------------'  `--------------------------'
     ),
 
     [_NUMSYM] = LAYOUT_split_3x6_3(
     //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_GRV,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0, LSFT(KC_GRV),
+         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                          KC_6,    KC_7,    KC_8,    KC_9,    KC_0, LSFT(KC_GRV),
     //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       KC_ESC, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,                      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE,
+         KC_ESC, KC_LPRN,  KC_RPRN, KC_LBRC, KC_RBRC,  KC_EQL,                      KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC, KC_PIPE,
     //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL, KC_UNDS, KC_PLUS, KC_MINS, KC_LBRC, KC_LCBR,                      KC_RCBR, KC_RBRC,  KC_EQL, _______, KC_BSLS, _______,
+        KC_LCTL, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_MINS,                       KC_CIRC, KC_AMPR, KC_ASTR, _______, KC_BSLS, _______,
     //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                      KC_LALT, _______, KC_LSFT,            KC_SPC,   KC_LGUI, _______
+                                      KC_LGUI, _______, KC_LSFT,            KC_LALT,   KC_SPC, ADJUST
                                       //`--------------------------'  `--------------------------'
     ),
 
+
     [_ARROWS] = LAYOUT_split_3x6_3(
     //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-        XXXXXXX,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                      KC_PGUP, KC_HOME, XXXXXXX,  KC_END, XXXXXXX, KC_DEL,
+        KC_TILD,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                      XXXXXXX, KC_HOME, XXXXXXX,  KC_END, KC_PGUP, KC_DEL,
     //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-        XXXXXXX,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,                      KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, XXXXXXX, XXXXXXX,
+        XXXXXXX,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,                      KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, KC_PGDN, _______,
     //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-        KC_LCTL,  KC_F11,  KC_F12, KC_COPY, KC_PSTE, XXXXXXX,                      KC_PGDN, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+        KC_LCTL,  KC_F11,  KC_F12, KC_COPY, KC_PSTE, CG_TOGG,                      KC_MPLY, KC_VOLD, KC_VOLU, KC_MNXT, XXXXXXX, _______,
     //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                        KC_LALT, _______, KC_LSFT,            KC_SPC,   KC_LGUI, _______
+                                        KC_LGUI, ADJUST, KC_LSFT,            KC_LALT,   KC_SPC, _______
                                         //`--------------------------'  `--------------------------'
     ),
 
     [_ADJUST] = LAYOUT_split_3x6_3(
     //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-         QK_RBT, DB_TOGG, XXXXXXX, XXXXXXX, XXXXXXX,  QWERTY,                      XXXXXXX, XXXXXXX, KC_VOLU, XXXXXXX, KC_PSCR, CG_TOGG,
+         QK_RBT, DB_TOGG, XXXXXXX, XXXXXXX, XXXXXXX,  QWERTY,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR, CG_TOGG,
     //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-        RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, RGB_SPI, XXXXXXX,                      XXXXXXX, KC_MPLY, KC_VOLD, KC_MNXT, XXXXXXX, XXXXXXX,
+        RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, RGB_SPI, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
     //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
         RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, RGB_SPD, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
     //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                      KC_LALT, _______, KC_LSFT,            KC_SPC,   KC_LGUI, _______
+                                      KC_LGUI, _______, KC_LSFT,            KC_LALT,   KC_SPC, _______
                                       //`--------------------------'  `--------------------------'
     ),
 
 };
 
-layer_state_t layer_state_set_user(layer_state_t state) {
-    return update_tri_layer_state(state, _NUMSYM, _ARROWS, _ADJUST);
-}
+// layer_state_t layer_state_set_user(layer_state_t state) {
+//     return update_tri_layer_state(state, _NUMSYM, _ARROWS, _ADJUST);
+// }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // if (record->event.pressed) {
@@ -252,47 +254,48 @@ static void render_wpm_counters(int current_wpm) {
     }
 }
 
-// Toggles pixel on/off, converts horizontal coordinates to vertical equivalent if necessary
-static void write_pixel(int x, int y, bool onoff) {
-    if (oled_horizontal) {
-        oled_write_pixel(x, y, onoff);
-    } else {
-        oled_write_pixel(y, 127 - x, onoff);
-    }
-}
+// // Toggles pixel on/off, converts horizontal coordinates to vertical equivalent if necessary
+// static void write_pixel(int x, int y, bool onoff) {
+//     oled_write_pixel(y, 127 - x, onoff);
+//     // if (oled_horizontal) {
+//     //     oled_write_pixel(x, y, onoff);
+//     // } else {
+//     //     oled_write_pixel(y, 127 - x, onoff);
+//     // }
+// }
 
-// Update WPM snail icon
-static void render_wpm_icon(int current_wpm) {
-    // wpm_icon is used to prevent unnecessary redraw
-    if ((current_wpm < icon_med_wpm) && (wpm_icon != 0)) {
-        wpm_icon = 0;
-    } else if ((current_wpm >= icon_med_wpm) && (current_wpm < icon_fast_wpm) && (wpm_icon != 1)) {
-        wpm_icon = 1;
-    } else if ((current_wpm >= icon_fast_wpm) && (wpm_icon != 2)) {
-        wpm_icon = 2;
-    } else {
-        return;
-    }
-    static const char PROGMEM snails[][2][24] = {
-        {{0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x20, 0xA0, 0x20, 0x40, 0x40, 0x80, 0x00, 0x00, 0x00, 0x80, 0x40, 0x20, 0x50, 0x88, 0x04, 0x00, 0x00},
-         {0x40, 0x60, 0x50, 0x4E, 0x51, 0x64, 0x4A, 0x51, 0x54, 0x49, 0x41, 0x62, 0x54, 0x49, 0x46, 0x41, 0x40, 0x30, 0x09, 0x04, 0x02, 0x01, 0x00, 0x00}},
-        {{0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x40, 0x40, 0x40, 0x40, 0x80, 0x80, 0x00, 0x00, 0x00, 0x04, 0x98, 0x60, 0x80, 0x00, 0x00, 0x00, 0x00},
-         {0x60, 0x50, 0x54, 0x4A, 0x51, 0x64, 0x4A, 0x51, 0x55, 0x49, 0x41, 0x62, 0x54, 0x49, 0x46, 0x41, 0x21, 0x10, 0x0A, 0x08, 0x05, 0x02, 0x00, 0x00}},
-        {{0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x40, 0x40, 0x40, 0x80, 0x80, 0x10, 0x10, 0x10, 0x20, 0x40, 0x40, 0xC0, 0x80, 0x80, 0x00, 0x00, 0x00},
-         {0x60, 0x58, 0x54, 0x62, 0x49, 0x54, 0x52, 0x51, 0x55, 0x49, 0x62, 0x52, 0x4D, 0x45, 0x46, 0x22, 0x21, 0x11, 0x10, 0x0A, 0x08, 0x05, 0x02, 0x00}}
-    };
-    if (oled_horizontal) {
-        oled_set_cursor(3, 1);
-        oled_write_raw_P(snails[wpm_icon][0], sizeof(snails[wpm_icon][0]));
-        oled_set_cursor(3, 2);
-        oled_write_raw_P(snails[wpm_icon][1], sizeof(snails[wpm_icon][1]));
-    } else {
-        oled_set_cursor(0, 11);
-        oled_write_raw_P(snails[wpm_icon][0], sizeof(snails[wpm_icon][0]));
-        oled_set_cursor(0, 12);
-        oled_write_raw_P(snails[wpm_icon][1], sizeof(snails[wpm_icon][1]));
-    }
-}
+// // Update WPM snail icon
+// static void render_wpm_icon(int current_wpm) {
+//     // wpm_icon is used to prevent unnecessary redraw
+//     if ((current_wpm < icon_med_wpm) && (wpm_icon != 0)) {
+//         wpm_icon = 0;
+//     } else if ((current_wpm >= icon_med_wpm) && (current_wpm < icon_fast_wpm) && (wpm_icon != 1)) {
+//         wpm_icon = 1;
+//     } else if ((current_wpm >= icon_fast_wpm) && (wpm_icon != 2)) {
+//         wpm_icon = 2;
+//     } else {
+//         return;
+//     }
+//     static const char PROGMEM snails[][2][24] = {
+//         {{0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x20, 0xA0, 0x20, 0x40, 0x40, 0x80, 0x00, 0x00, 0x00, 0x80, 0x40, 0x20, 0x50, 0x88, 0x04, 0x00, 0x00},
+//          {0x40, 0x60, 0x50, 0x4E, 0x51, 0x64, 0x4A, 0x51, 0x54, 0x49, 0x41, 0x62, 0x54, 0x49, 0x46, 0x41, 0x40, 0x30, 0x09, 0x04, 0x02, 0x01, 0x00, 0x00}},
+//         {{0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x40, 0x40, 0x40, 0x40, 0x80, 0x80, 0x00, 0x00, 0x00, 0x04, 0x98, 0x60, 0x80, 0x00, 0x00, 0x00, 0x00},
+//          {0x60, 0x50, 0x54, 0x4A, 0x51, 0x64, 0x4A, 0x51, 0x55, 0x49, 0x41, 0x62, 0x54, 0x49, 0x46, 0x41, 0x21, 0x10, 0x0A, 0x08, 0x05, 0x02, 0x00, 0x00}},
+//         {{0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x40, 0x40, 0x40, 0x80, 0x80, 0x10, 0x10, 0x10, 0x20, 0x40, 0x40, 0xC0, 0x80, 0x80, 0x00, 0x00, 0x00},
+//          {0x60, 0x58, 0x54, 0x62, 0x49, 0x54, 0x52, 0x51, 0x55, 0x49, 0x62, 0x52, 0x4D, 0x45, 0x46, 0x22, 0x21, 0x11, 0x10, 0x0A, 0x08, 0x05, 0x02, 0x00}}
+//     };
+//     if (oled_horizontal) {
+//         oled_set_cursor(3, 1);
+//         oled_write_raw_P(snails[wpm_icon][0], sizeof(snails[wpm_icon][0]));
+//         oled_set_cursor(3, 2);
+//         oled_write_raw_P(snails[wpm_icon][1], sizeof(snails[wpm_icon][1]));
+//     } else {
+//         oled_set_cursor(0, 11);
+//         oled_write_raw_P(snails[wpm_icon][0], sizeof(snails[wpm_icon][0]));
+//         oled_set_cursor(0, 12);
+//         oled_write_raw_P(snails[wpm_icon][1], sizeof(snails[wpm_icon][1]));
+//     }
+// }
 
 static void render_lance(void) {
     // 'lancesigkeyboardtiny', 16x32px
@@ -326,47 +329,47 @@ static void render_lance(void) {
     }
 }
 
-// Update WPM graph
-static void render_wpm_graph(int current_wpm) {
-    int line_height = ((current_wpm / graph_top_wpm) * 7);
-    if (line_height > 7) {
-        line_height = 7;
-    }
-    // Count graph line pixels, return if nothing to draw
-    int pixel_count = line_height;
-    for (int i = 0; i < 63; i++) {
-        pixel_count += graph_lines[i];
-    }
-    if (pixel_count == 0) {
-        return;
-    }
-    // Shift array elements left or right depending on graph_direction, append new graph line
-    if (graph_direction) {
-        for (int i = 0; i < 63; i++) {
-            graph_lines[i] = graph_lines[i + 1];
-        }
-        graph_lines[63] = line_height;
-    } else {
-        for (int i = 63; i > 0; i--) {
-            graph_lines[i] = graph_lines[i - 1];
-        }
-        graph_lines[0] = line_height;
-    }
-    // Draw all graph lines (left to right, bottom to top)
-    int draw_count, arrpos;
-    for (int x = 1; x <= 127; x += 2) {
-        arrpos = x / 2;
-        draw_count = graph_lines[arrpos];
-        for (int y = 31; y >= 25; y--) {
-            if (draw_count > 0) {
-                write_pixel(x, y, true);
-                draw_count--;
-            } else {
-                write_pixel(x, y, false);
-            }
-        }
-    }
-}
+// // Update WPM graph
+// static void render_wpm_graph(int current_wpm) {
+//     int line_height = ((current_wpm / graph_top_wpm) * 7);
+//     if (line_height > 7) {
+//         line_height = 7;
+//     }
+//     // Count graph line pixels, return if nothing to draw
+//     int pixel_count = line_height;
+//     for (int i = 0; i < 63; i++) {
+//         pixel_count += graph_lines[i];
+//     }
+//     if (pixel_count == 0) {
+//         return;
+//     }
+//     // Shift array elements left or right depending on graph_direction, append new graph line
+//     if (graph_direction) {
+//         for (int i = 0; i < 63; i++) {
+//             graph_lines[i] = graph_lines[i + 1];
+//         }
+//         graph_lines[63] = line_height;
+//     } else {
+//         for (int i = 63; i > 0; i--) {
+//             graph_lines[i] = graph_lines[i - 1];
+//         }
+//         graph_lines[0] = line_height;
+//     }
+//     // Draw all graph lines (left to right, bottom to top)
+//     int draw_count, arrpos;
+//     for (int x = 1; x <= 127; x += 2) {
+//         arrpos = x / 2;
+//         draw_count = graph_lines[arrpos];
+//         for (int y = 31; y >= 25; y--) {
+//             if (draw_count > 0) {
+//                 write_pixel(x, y, true);
+//                 draw_count--;
+//             } else {
+//                 write_pixel(x, y, false);
+//             }
+//         }
+//     }
+// }
 
 bool oled_task_user(void) {
     int current_wpm = get_current_wpm();
@@ -381,12 +384,12 @@ bool oled_task_user(void) {
         // Update WPM counters
         render_wpm_counters(current_wpm);
         // Update WPM snail icon
-        render_wpm_icon(current_wpm);
+        // render_wpm_icon(current_wpm);
         // Update WPM graph every graph_refresh milliseconds
-        if (timer_elapsed(timer) > graph_refresh) {
-            render_wpm_graph(current_wpm);
-            timer = timer_read();
-        }
+        // if (timer_elapsed(timer) > graph_refresh) {
+        //     render_wpm_graph(current_wpm);
+        //     timer = timer_read();
+        // }
     }
     return false;
 }

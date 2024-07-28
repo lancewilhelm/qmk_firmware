@@ -107,9 +107,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    undef ENABLE_RGB_MATRIX_PIXEL_RAIN
 #    undef ENABLE_RGB_MATRIX_PIXEL_FLOW
 #    undef ENABLE_RGB_MATRIX_PIXEL_FRACTAL
+
 // enabled only if RGB_MATRIX_FRAMEBUFFER_EFFECTS is defined
 #    undef ENABLE_RGB_MATRIX_TYPING_HEATMAP
 #    undef ENABLE_RGB_MATRIX_DIGITAL_RAIN
+
 // enabled only of RGB_MATRIX_KEYPRESSES or RGB_MATRIX_KEYRELEASES is defined
 #    undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
 #    undef ENABLE_RGB_MATRIX_SOLID_REACTIVE
